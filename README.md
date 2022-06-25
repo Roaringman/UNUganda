@@ -1,7 +1,13 @@
 # Read below for details on getting project up and running
 
 ### Immediate Issues
-Data -> currently from json files in project data folder. Needs to be fetching external sources (When we know where they are)
+Data 1 -> currently from json files in project data folder. Needs to be fetching external sources (When we know where they are)
+
+Data 2 -> Some issues with certain district geometries not rendering
+
+Data 3 -> Not all district have all statistic information provided by UN. see SAP tables -> relates to poverty and population data
+
+Data 4 -> Some Districts have the same name ? We need unique identifier, preferably provided by UN for future addition of data
 
 Rendering 1 -> inefficient rendering causing mouseover and out events to trigger -> removing highlighting on current object
 
@@ -12,6 +18,7 @@ UI -> missing elements for selecting hazard (threat ind the code), year, sector
 higher order function -> higher order function to call when district is selected from: map, dropdown
                       -> -> should handle rendering of states for visuals and load of data for other UI elements
                       
+
               
 
 
