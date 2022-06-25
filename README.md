@@ -1,3 +1,21 @@
+# Read below for details on getting project up and running
+
+### Immediate Issues
+Data -> currently from json files in project data folder. Needs to be fetching external sources (When we know where they are)
+
+Rendering 1 -> inefficient rendering causing mouseover and out events to trigger -> removing highlighting on current object
+
+Rendering 2 -> Need visual indiation of district selected state -> same issue as rendering 1
+
+UI -> missing elements for selecting hazard (threat ind the code), year, sector
+
+higher order function -> higher order function to call when district is selected from: map, dropdown
+                      -> -> should handle rendering of states for visuals and load of data for other UI elements
+                      
+              
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
