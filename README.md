@@ -18,6 +18,11 @@ UI -> missing elements for selecting hazard (threat ind the code), year, sector
 higher order function -> higher order function to call when district is selected from: map, dropdown
                       -> -> should handle rendering of states for visuals and load of data for other UI elements
                       
+Current hardcoded value -> in Components\LayerHandling.js line 49 (as of 25/06/2022), the line:
+  fillColor: categoryColor(props.selectedThreat, sectorThreat[0] ? sectorThreat[0].flood2020threat : "none" )
+  has hardcoded value flood2020threat -> this should correspond to Hazard and year -> model for this is not implemented
+
+                      
 
               
 
