@@ -17,6 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "eslint src --ignore-pattern node_modules --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
