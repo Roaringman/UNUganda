@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@turf/turf": "^6.5.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-react-app": "^3.1.2",
     "leaflet": "^1.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -19,7 +21,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint src --ignore-pattern node_modules --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -42,18 +43,5 @@
   },
   "devDependencies": {
     "@architect/sandbox": "^5.3.0"
-  },
-  "description": "Data 1 -> currently from json files in project data folder. Needs to be fetching external sources (When we know where they are)",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Roaringman/UNUganda.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Roaringman/UNUganda/issues"
-  },
-  "homepage": "https://github.com/Roaringman/UNUganda#readme"
+  }
 }
