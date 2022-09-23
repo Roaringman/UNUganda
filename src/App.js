@@ -1,29 +1,48 @@
-import './App.css';
-import LayerHandling from './Components/LayerHandling';
-import DistrictOverview from './Components/DistrictOverview';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, Polygon, Tooltip } from 'react-leaflet'
-import { ugandaDistricts } from './Data/uganda_districts.js';
+import "./App.css";
+import LayerHandling from "./Components/LayerHandling";
+import DistrictOverview from "./Components/DistrictOverview";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  GeoJSON,
+  Polygon,
+  Tooltip,
+} from "react-leaflet";
+import { ugandaDistricts } from "./Data/uganda_districts.js";
 import React, { useEffect, useState } from "react";
-import { useMap, useMapEvent } from 'react-leaflet/hooks'
-import { populationDistrict } from './Data/populationData_districts';
-import { sectorThreat_agriculture_district } from './Data/sectorThreat_agriculture_district';
+import { useMap, useMapEvent } from "react-leaflet/hooks";
+import { populationDistrict } from "./Data/populationData_districts";
+import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district";
 
-import { Container, Grid, Box, ToggleButton, ToggleButtonGroup, Stack, Typography, Button, TextField, IconButton, List } from '@mui/material';
-import { styled} from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  Container,
+  Grid,
+  Box,
+  ToggleButton,
+  ToggleButtonGroup,
+  Stack,
+  Typography,
+  Button,
+  TextField,
+  IconButton,
+  List,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import MuiDrawer from "@mui/material/Drawer";
-
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
     width,
-    height
+    height,
   };
 }
 
@@ -53,97 +72,103 @@ const UnToggleBtn = styled(ToggleButton)(({ selectedcolor }) => ({
   "&.Mui-selected, &.Mui-selected:hover": {
     color: "white",
     backgroundColor: selectedcolor ? selectedcolor : "#A7A7A7",
-  }
+  },
 }));
 
 const BtnAccordion = styled(Accordion)(() => ({
   border: `1px solid #C1C1C1`,
-  '&:not(:last-child)': {
+  "&:not(:last-child)": {
     borderBottom: 0,
   },
-  '&:before': {
-    display: 'none',
+  "&:before": {
+    display: "none",
   },
-  '&.Mui-expanded':{
-    margin: '0px 0px'
-  }
+  "&.Mui-expanded": {
+    margin: "0px 0px",
+  },
 }));
 
 const UnButton = styled(Button)(() => ({
   border: `1px solid #C1C1C1`,
   borderRadius: 0,
   padding: "12px 16px",
-  borderBottom:"none",
-  justifyContent:"flex-start",
-  color:"#000000DE",
-  "&:hover":{
+  borderBottom: "none",
+  justifyContent: "flex-start",
+  color: "#000000DE",
+  "&:hover": {
     border: `1px solid #C1C1C1`,
-    borderBottom:"none",
+    borderBottom: "none",
   },
-  '&:last-child': {
+  "&:last-child": {
     borderBottom: `1px solid #C1C1C1`,
   },
 }));
 
 function App() {
-
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedThreat, setSelectedThreat] = useState("drought");
 
-  const startingBounds = [[4.226101095480792, 34.61213931437568],
-  [-1.4465324972187859, 29.51102531366363]]
+  const startingBounds = [
+    [4.226101095480792, 34.61213931437568],
+    [-1.4465324972187859, 29.51102531366363],
+  ];
 
   const { height, width } = useWindowDimensions();
 
-  const hazardArray = [{name:"drought",color:"#E09C4C"},{name:"heatwave",color:"#C33030"},{name:"flood",color:"#387EE6"},{name:"landslide",color:"#836436"}]
-  const [hazard, setHazard] = useState('drought');
-  const handleHazardChange = (
-    event,
-    newHazard,
-  ) => {
+  const hazardArray = [
+    { name: "drought", color: "#E09C4C" },
+    { name: "heatwave", color: "#C33030" },
+    { name: "flood", color: "#387EE6" },
+    { name: "landslide", color: "#836436" },
+  ];
+  const [hazard, setHazard] = useState("drought");
+  const handleHazardChange = (event, newHazard) => {
     setHazard(newHazard);
   };
 
-  const cropsArray = ["Banana","Beans","Cassava","Coffee","Cotton","Maize","Millet","Potatoes","Sorghum","Sugar Cane","Tea","Rice"]
-  const handleCropsChange = (
-    event,
-    newCrops,
-  ) => {
+  const cropsArray = [
+    "Banana",
+    "Beans",
+    "Cassava",
+    "Coffee",
+    "Cotton",
+    "Maize",
+    "Millet",
+    "Potatoes",
+    "Sorghum",
+    "Sugar Cane",
+    "Tea",
+    "Rice",
+  ];
+  const handleCropsChange = (event, newCrops) => {
     setSector(newCrops);
   };
 
-  const timeArray =["2020", "2030", "2050"]
-  const [time, setTime] = useState('2020');
-  const handleTimeChange = (
-    event,
-    newTime,
-  ) => {
+  const timeArray = ["2020", "2030", "2050"];
+  const [time, setTime] = useState("2020");
+  const handleTimeChange = (event, newTime) => {
     setTime(newTime);
   };
 
-  const [population, setPopulation] = useState('hide');
-  const handlePopulationChange = (
-    event,
-    newPopulation,
-  ) => {
+  const [population, setPopulation] = useState("hide");
+  const handlePopulationChange = (event, newPopulation) => {
     setPopulation(newPopulation);
   };
 
   const [expanded, setExpanded] = useState(false);
 
-  const handleChange =
-    (panel) => (event, isExpanded) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const [sector, setSector] = useState(null);
 
   const handleSetSector = (btnName) => {
-    console.log("btnName", btnName)
-    if(btnName === sector){
-      setSector(null)
-    } else setSector(btnName)
-  }
+    console.log("btnName", btnName);
+    if (btnName === sector) {
+      setSector(null);
+    } else setSector(btnName);
+  };
 
   // Just drawer things
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -171,20 +196,18 @@ function App() {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.leavingScreen,
         }),
-        width: (width/12)*2,
+        width: (width / 12) * 2,
         [theme.breakpoints.up("sm")]: {
-          width: (width/12)*2,
+          width: (width / 12) * 2,
         },
       }),
     },
   }));
 
   useEffect(() => {
-    if (selectedDistrict !== ""){
-      setDrawerOpen(false)
-    } else (
-      setDrawerOpen(true)
-    )
+    if (selectedDistrict !== "") {
+      setDrawerOpen(false);
+    } else setDrawerOpen(true);
   }, [selectedDistrict]);
 
   return (
@@ -192,201 +215,334 @@ function App() {
       <Container maxWidth="100vw" sx={{ height: height }} disableGutters>
         <Grid container sx={{ height: height }}>
           {/* B U T T O N S */}
-          <Grid item xs={drawerOpen ? 3.5 : 2} sx={{ height: height }} onClick={()=>(!drawerOpen ? setDrawerOpen(true): null)}>
+          <Grid
+            item
+            xs={drawerOpen ? 3.5 : 2}
+            sx={{ height: height, overflow: "auto" }}
+            onClick={() => (!drawerOpen ? setDrawerOpen(true) : null)}
+          >
             <Drawer variant="permanent" open={drawerOpen}>
-              <Stack spacing={2} mt={6} pr={2}>
-                
+              <Stack spacing={2} mt={4} mb={4} pr={0}>
                 <Grid container spacing={0}>
                   {/*<IconButton onClick={toggleDrawer}>
                     <ChevronLeftIcon />
                   </IconButton>*/}
                 </Grid>
-                
+
                 {/* HAZARD */}
                 <Grid container spacing={0}>
-                  <Grid item xs={drawerOpen ? 3 : 6} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <Typography variant="body1" >
+                  <Grid
+                    item
+                    xs={drawerOpen ? 3 : 6}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Typography variant="body1" pt={2}>
                       HAZARD
                     </Typography>
                   </Grid>
-                  <Grid item xs={drawerOpen ? 9 : 6} sx={{pl:2}}>
+                  <Grid item xs={drawerOpen ? 9 : 6} sx={{ pl: 2 }}>
                     <ToggleButtonGroup
                       color="primary"
                       value={hazard}
                       exclusive
                       onChange={handleHazardChange}
+                      flexWrap={"wrap"}
                     >
-                      {drawerOpen ? hazardArray.map((threat)=>(
-                        <UnToggleBtn onClick={() => setSelectedThreat(threat.name)} value={threat.name} sx={{ mr: 1 }} selectedcolor={threat.color}>{threat.name}</UnToggleBtn>
-                      )) : hazardArray.map((threat)=>(
-                        threat.name === selectedThreat ? <UnToggleBtn onClick={() => setSelectedThreat(threat.name)} value={threat.name} sx={{ mr: 1 }} selectedcolor={threat.color}>Drought</UnToggleBtn> : null
-                      ))}
+                      {drawerOpen
+                        ? hazardArray.map((threat) => (
+                            <UnToggleBtn
+                              onClick={() => setSelectedThreat(threat.name)}
+                              value={threat.name}
+                              sx={{ mr: 1 }}
+                              selectedcolor={threat.color}
+                            >
+                              {threat.name}
+                            </UnToggleBtn>
+                          ))
+                        : hazardArray.map((threat) =>
+                            threat.name === selectedThreat ? (
+                              <UnToggleBtn
+                                onClick={() => setSelectedThreat(threat.name)}
+                                value={threat.name}
+                                sx={{ mr: 1 }}
+                                selectedcolor={threat.color}
+                              >
+                                Drought
+                              </UnToggleBtn>
+                            ) : null
+                          )}
                     </ToggleButtonGroup>
                   </Grid>
                 </Grid>
-                
+
                 {/* TIME */}
                 <Grid container spacing={0}>
-                  <Grid item xs={drawerOpen ? 3 : 6} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <Typography variant="body1" >
+                  <Grid
+                    item
+                    xs={drawerOpen ? 3 : 6}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Typography variant="body1" pt={2}>
                       TIME
                     </Typography>
                   </Grid>
-                  <Grid item xs={drawerOpen ? 9 : 6} sx={{pl:2}}>
+                  <Grid item xs={drawerOpen ? 9 : 6} sx={{ pl: 2 }}>
                     <ToggleButtonGroup
                       color="primary"
                       value={time}
                       exclusive
                       onChange={handleTimeChange}
                     >
-                      {drawerOpen ? timeArray.map((time)=>(
-                        <UnToggleBtn value={time} key={time} sx={{ mr: 2, mb:2 }}>{time}</UnToggleBtn>
-                      )) : <UnToggleBtn value={time} key={time} sx={{ mr: 2, mb:2 }}>{time}</UnToggleBtn>}
+                      {drawerOpen ? (
+                        timeArray.map((time) => (
+                          <UnToggleBtn
+                            value={time}
+                            key={time}
+                            sx={{ mr: 2, mb: 2 }}
+                          >
+                            {time}
+                          </UnToggleBtn>
+                        ))
+                      ) : (
+                        <UnToggleBtn
+                          value={time}
+                          key={time}
+                          sx={{ mr: 2, mb: 2 }}
+                        >
+                          {time}
+                        </UnToggleBtn>
+                      )}
                     </ToggleButtonGroup>
                   </Grid>
                 </Grid>
 
                 {/* SECTOR */}
                 <Grid container spacing={0}>
-                  <Grid item xs={drawerOpen ? 3 : 6} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", alignItems: "flex-start" }}>
-                    <Typography variant="body1" sx={{ pt: 1.8 }}>
+                  <Grid
+                    item
+                    xs={drawerOpen ? 3 : 6}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <Typography variant="body1" pt={2}>
                       SECTOR
                     </Typography>
                   </Grid>
 
-                  {drawerOpen ? ( <Grid item xs={8} sx={{pl:2}}>
+                  {drawerOpen ? (
+                    <Grid item xs={8} sx={{ pl: 2 }}>
+                      <BtnAccordion
+                        variant="outlined"
+                        square
+                        expanded={expanded === "health"}
+                        onChange={handleChange("health")}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="healthbh-content"
+                          id="healthbh-header"
+                        >
+                          <Typography sx={{ textTransform: "Uppercase" }}>
+                            Health
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {/* something something */}
+                        </AccordionDetails>
+                      </BtnAccordion>
 
-                    <BtnAccordion variant="outlined" square expanded={expanded === 'health'} onChange={handleChange('health')}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="healthbh-content"
-                        id="healthbh-header"
+                      <BtnAccordion
+                        variant="outlined"
+                        square
+                        expanded={expanded === "crops"}
+                        onChange={handleChange("crops")}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="cropsbh-content"
+                          id="cropsbh-header"
+                        >
+                          <Typography sx={{ textTransform: "Uppercase" }}>
+                            crops
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <ToggleButtonGroup
+                            color="primary"
+                            value={sector}
+                            exclusive
+                            onChange={handleCropsChange}
+                            sx={{
+                              flexWrap: "wrap",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {cropsArray.map((crop) => (
+                              <UnToggleBtn
+                                value={crop}
+                                key={crop}
+                                sx={{ mr: 2, mb: 2 }}
+                                onClick={() => handleSetSector(crop)}
+                              >
+                                {crop}
+                              </UnToggleBtn>
+                            ))}
+                          </ToggleButtonGroup>
+                        </AccordionDetails>
+                      </BtnAccordion>
+
+                      <UnButton
+                        variant="outlined"
+                        fullWidth
+                        size="large"
+                        className={sector === "forestry" ? "activeBtn" : ""}
+                        onClick={() => handleSetSector("forestry")}
                       >
                         <Typography sx={{ textTransform: "Uppercase" }}>
-                          Health
+                          forestry
                         </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {/* something something */}
-                      </AccordionDetails>
-                    </BtnAccordion>
+                      </UnButton>
 
-                    <BtnAccordion variant="outlined" square expanded={expanded === 'crops'} onChange={handleChange('crops')}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="cropsbh-content"
-                        id="cropsbh-header"
+                      <UnButton
+                        variant="outlined"
+                        fullWidth
+                        size="large"
+                        className={sector === "Aquaculture" ? "activeBtn" : ""}
+                        onClick={() => handleSetSector("Aquaculture")}
                       >
                         <Typography sx={{ textTransform: "Uppercase" }}>
-                          crops
+                          Aquaculture
                         </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                      <ToggleButtonGroup
-                        color="primary"
-                        value={sector}
-                        exclusive
-                        onChange={handleCropsChange}
-                        sx={{
-                          flexWrap: "wrap",
-                          justifyContent: "center"
-                        }}
+                      </UnButton>
+
+                      <BtnAccordion
+                        variant="outlined"
+                        square
+                        expanded={expanded === "water"}
+                        onChange={handleChange("water")}
                       >
-                      {cropsArray.map((crop)=>(
-                        <UnToggleBtn value={crop} key={crop} sx={{ mr: 2, mb:2 }} onClick={() => handleSetSector(crop)}>{crop}</UnToggleBtn>
-                      ))}
-                    </ToggleButtonGroup>
-                      </AccordionDetails>
-                    </BtnAccordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="waterbh-content"
+                          id="waterbh-header"
+                        >
+                          <Typography sx={{ textTransform: "Uppercase" }}>
+                            water
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {/* something something */}
+                        </AccordionDetails>
+                      </BtnAccordion>
 
-                    <UnButton variant="outlined" fullWidth size="large"  className={sector === "forestry" ? "activeBtn" : ""} onClick={() => handleSetSector("forestry")}>
-                      <Typography sx={{ textTransform: "Uppercase" }}>
-                        forestry
-                      </Typography>
-                    </UnButton>
+                      <BtnAccordion
+                        variant="outlined"
+                        square
+                        expanded={expanded === "Biodiversity"}
+                        onChange={handleChange("Biodiversity")}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="Biodiversitybh-content"
+                          id="Biodiversitybh-header"
+                        >
+                          <Typography sx={{ textTransform: "Uppercase" }}>
+                            Biodiversity
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {/* something something */}
+                        </AccordionDetails>
+                      </BtnAccordion>
 
-                    <UnButton variant="outlined" fullWidth size="large"  className={sector === "Aquaculture" ? "activeBtn" : ""} onClick={() => handleSetSector("Aquaculture")}>
-                      <Typography sx={{ textTransform: "Uppercase" }}>
-                        Aquaculture
-                      </Typography>
-                    </UnButton>
-
-                    <BtnAccordion variant="outlined" square expanded={expanded === 'water'} onChange={handleChange('water')}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="waterbh-content"
-                        id="waterbh-header"
+                      <BtnAccordion
+                        variant="outlined"
+                        square
+                        expanded={expanded === "Mineral_energy"}
+                        onChange={handleChange("Mineral_energy")}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="Mineral_energybh-content"
+                          id="Mineral_energybh-header"
+                        >
+                          <Typography sx={{ textTransform: "Uppercase" }}>
+                            Mineral development & energy
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {/* something something */}
+                        </AccordionDetails>
+                      </BtnAccordion>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={6} sx={{ pl: 2 }}>
+                      <UnButton
+                        variant="outlined"
+                        fullWidth
+                        size="large"
+                        className={"activeBtn"}
                       >
                         <Typography sx={{ textTransform: "Uppercase" }}>
-                          water
+                          {sector !== "" ? sector : "Not Set"}
                         </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {/* something something */}
-                      </AccordionDetails>
-                    </BtnAccordion>
-
-                    <BtnAccordion variant="outlined" square expanded={expanded === 'Biodiversity'} onChange={handleChange('Biodiversity')}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="Biodiversitybh-content"
-                        id="Biodiversitybh-header"
-                      >
-                        <Typography sx={{ textTransform: "Uppercase" }}>
-                          Biodiversity
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {/* something something */}
-                      </AccordionDetails>
-                    </BtnAccordion>
-
-                    <BtnAccordion variant="outlined" square expanded={expanded === 'Mineral_energy'} onChange={handleChange('Mineral_energy')}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="Mineral_energybh-content"
-                        id="Mineral_energybh-header"
-                      >
-                        <Typography sx={{ textTransform: "Uppercase" }}>
-                          Mineral development & energy
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {/* something something */}
-                      </AccordionDetails>
-                    </BtnAccordion>
-
-                  </Grid>) : (<Grid item xs={6} sx={{pl:2}}>
-                    <UnButton variant="outlined" fullWidth size="large"  className={"activeBtn"} >
-                      <Typography sx={{ textTransform: "Uppercase" }}>
-                        {sector !== "" ? sector : "Not Set"}
-                      </Typography>
-                    </UnButton>
-                    </Grid>)}
+                      </UnButton>
+                    </Grid>
+                  )}
                 </Grid>
-                
+
                 {/* POPULATION */}
                 <Grid container spacing={0}>
-                  <Grid item xs={drawerOpen ? 3 : 6} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <Typography variant="body1" >
+                  <Grid
+                    item
+                    xs={drawerOpen ? 3 : 6}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Typography variant="body1" pt={2}>
                       POPULATION
                     </Typography>
                   </Grid>
                   {drawerOpen ? (
-                    <Grid item xs={9} sx={{pl:2}}>
-                    <ToggleButtonGroup
-                      color="primary"
-                      value={population}
-                      exclusive
-                      onChange={handlePopulationChange}
-                    >
-                      <UnToggleBtn value="show" sx={{ mr: 2 }} >show</UnToggleBtn>
-                      <UnToggleBtn value="hide" sx={{ mr: 2 }}  >hide</UnToggleBtn>
-                    </ToggleButtonGroup>
-                  </Grid>
+                    <Grid item xs={9} sx={{ pl: 2 }}>
+                      <ToggleButtonGroup
+                        color="primary"
+                        value={population}
+                        exclusive
+                        onChange={handlePopulationChange}
+                      >
+                        <UnToggleBtn value="show" sx={{ mr: 2 }}>
+                          show
+                        </UnToggleBtn>
+                        <UnToggleBtn value="hide" sx={{ mr: 2 }}>
+                          hide
+                        </UnToggleBtn>
+                      </ToggleButtonGroup>
+                    </Grid>
                   ) : (
-                    <Grid item xs={6} sx={{pl:2}}>
-                      <UnToggleBtn value={population} sx={{ mr: 2 }} className={"activeBtn"} >{population}</UnToggleBtn>
+                    <Grid item xs={6} sx={{ pl: 2 }}>
+                      <UnToggleBtn
+                        value={population}
+                        sx={{ mr: 2 }}
+                        className={"activeBtn"}
+                      >
+                        {population}
+                      </UnToggleBtn>
                     </Grid>
                   )}
                 </Grid>
@@ -394,57 +550,100 @@ function App() {
                 {/* SEARCH */}
                 <Grid container spacing={0}>
                   {drawerOpen ? (
-                    <Grid item xs={3} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                    <Typography variant="body1" >
-                      SEARCH
-                    </Typography>
-                  </Grid>
-                  ) : (
-                    null
-                  )}
-                  
-                  <Grid item xs={drawerOpen ? 8 : 12} sx={{pl:2}}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end'}}>
-                      <TextField id="input-with-sx" label="Find a district" variant="standard" fullWidth/>
-                      <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <Grid
+                      item
+                      xs={3}
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Typography variant="body1" pt={2}>
+                        SEARCH
+                      </Typography>
+                    </Grid>
+                  ) : null}
+
+                  <Grid item xs={drawerOpen ? 8 : 12} sx={{ pl: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                      <TextField
+                        id="input-with-sx"
+                        label="Find a district"
+                        variant="standard"
+                        fullWidth
+                      />
+                      <SearchIcon
+                        sx={{ color: "action.active", mr: 1, my: 0.5 }}
+                      />
                     </Box>
                   </Grid>
                 </Grid>
-                
+
                 {/* RESET */}
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sx={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <UnToggleBtn value="reset all" sx={{ mr: 2 }}>reset all</UnToggleBtn>
-                    </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <UnToggleBtn value="reset all" sx={{ mr: 2 }}>
+                      reset all
+                    </UnToggleBtn>
+                  </Grid>
                 </Grid>
-
               </Stack>
             </Drawer>
           </Grid>
-          
+
           {/* M A P */}
           <Grid item xs={drawerOpen ? 8.5 : 5} sx={{ height: height }}>
-            <MapContainer bounds={startingBounds} scrollWheelZoom={false} dragging={true} doubleClickZoom={false} zoomControl={false}>
+            <MapContainer
+              bounds={startingBounds}
+              scrollWheelZoom={false}
+              dragging={true}
+              doubleClickZoom={false}
+              zoomControl={false}
+            >
               <TileLayer
                 attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
                 url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
               />
 
-
-              <LayerHandling selectedThreat={selectedThreat} population={populationDistrict} data={ugandaDistricts} bounds={startingBounds} selectedDistrict={selectedDistrict} setSelectedDistrict={setSelectedDistrict} sectorThreat={sectorThreat_agriculture_district} selectedTimeScale={time} populationToggle={population} sectorSelector={sector}/>
-
+              <LayerHandling
+                selectedThreat={selectedThreat}
+                population={populationDistrict}
+                data={ugandaDistricts}
+                bounds={startingBounds}
+                selectedDistrict={selectedDistrict}
+                setSelectedDistrict={setSelectedDistrict}
+                sectorThreat={sectorThreat_agriculture_district}
+                selectedTimeScale={time}
+                populationToggle={population}
+                sectorSelector={sector}
+              />
             </MapContainer>
           </Grid>
 
           {/* S E A R C H */}
-          <Grid item xs={drawerOpen ? 0 : 5} sx={{overflow:"auto", height: height}}>
-            {
-            selectedDistrict.length > 0 &&
-            <DistrictOverview selectedThreat={selectedThreat} districtName={selectedDistrict} population={populationDistrict} sectorThreat={sectorThreat_agriculture_district}>
-            </DistrictOverview>
-            }
+          <Grid
+            item
+            xs={drawerOpen ? 0 : 5}
+            sx={{ overflow: "auto", height: height }}
+          >
+            {selectedDistrict.length > 0 && (
+              <DistrictOverview
+                selectedThreat={selectedThreat}
+                districtName={selectedDistrict}
+                population={populationDistrict}
+                sectorThreat={sectorThreat_agriculture_district}
+              ></DistrictOverview>
+            )}
           </Grid>
-
         </Grid>
       </Container>
     </Box>
