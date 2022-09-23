@@ -217,8 +217,8 @@ function App() {
           {/* B U T T O N S */}
           <Grid
             item
-            xs={drawerOpen ? 3.5 : 2}
-            sx={{ height: height, overflow: "auto" }}
+            xs={drawerOpen ? 3.5 : 1.5}
+            sx={{ height: height, overflowX: "hidden", overflowY: "scroll" }}
             onClick={() => (!drawerOpen ? setDrawerOpen(true) : null)}
           >
             <Drawer variant="permanent" open={drawerOpen}>
@@ -233,11 +233,12 @@ function App() {
                 <Grid container spacing={0}>
                   <Grid
                     item
-                    xs={drawerOpen ? 3 : 6}
+                    xs={drawerOpen ? 3 : 12}
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
-                      justifyContent: "flex-end",
+                      justifyContent: drawerOpen ? "flex-end" : "flex-start",
+                      paddingLeft: drawerOpen ? 0 : 2,
                     }}
                   >
                     <Typography variant="body1" pt={2}>
@@ -250,7 +251,7 @@ function App() {
                       value={hazard}
                       exclusive
                       onChange={handleHazardChange}
-                      flexWrap={"wrap"}
+                      sx={{ flexWrap: "wrap" }}
                     >
                       {drawerOpen
                         ? hazardArray.map((threat) => (
@@ -283,11 +284,12 @@ function App() {
                 <Grid container spacing={0}>
                   <Grid
                     item
-                    xs={drawerOpen ? 3 : 6}
+                    xs={drawerOpen ? 3 : 12}
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
-                      justifyContent: "flex-end",
+                      justifyContent: drawerOpen ? "flex-end" : "flex-start",
+                      paddingLeft: drawerOpen ? 0 : 2,
                     }}
                   >
                     <Typography variant="body1" pt={2}>
@@ -328,12 +330,12 @@ function App() {
                 <Grid container spacing={0}>
                   <Grid
                     item
-                    xs={drawerOpen ? 3 : 6}
+                    xs={drawerOpen ? 3 : 12}
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
-                      justifyContent: "flex-end",
-                      alignItems: "flex-start",
+                      justifyContent: drawerOpen ? "flex-end" : "flex-start",
+                      paddingLeft: drawerOpen ? 0 : 2,
                     }}
                   >
                     <Typography variant="body1" pt={2}>
@@ -507,11 +509,12 @@ function App() {
                 <Grid container spacing={0}>
                   <Grid
                     item
-                    xs={drawerOpen ? 3 : 6}
+                    xs={drawerOpen ? 3 : 12}
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
-                      justifyContent: "flex-end",
+                      justifyContent: drawerOpen ? "flex-end" : "flex-start",
+                      paddingLeft: drawerOpen ? 0 : 2,
                     }}
                   >
                     <Typography variant="body1" pt={2}>
@@ -547,7 +550,7 @@ function App() {
                   )}
                 </Grid>
 
-                {/* SEARCH */}
+                {/* SEARCH 
                 <Grid container spacing={0}>
                   {drawerOpen ? (
                     <Grid
@@ -579,8 +582,9 @@ function App() {
                     </Box>
                   </Grid>
                 </Grid>
+                */}
 
-                {/* RESET */}
+                {/* RESET
                 <Grid container spacing={0}>
                   <Grid
                     item
@@ -596,6 +600,7 @@ function App() {
                     </UnToggleBtn>
                   </Grid>
                 </Grid>
+                 */}
               </Stack>
             </Drawer>
           </Grid>
@@ -632,7 +637,7 @@ function App() {
           {/* S E A R C H */}
           <Grid
             item
-            xs={drawerOpen ? 0 : 5}
+            xs={drawerOpen ? 0 : 5.5}
             sx={{ overflow: "auto", height: height }}
           >
             {selectedDistrict.length > 0 && (
