@@ -1,6 +1,6 @@
-import "./App.css";
-import LayerHandling from "./Components/LayerHandling";
-import DistrictOverview from "./Components/DistrictOverview";
+import "./App.css"
+import LayerHandling from "./Components/LayerHandling"
+import DistrictOverview from "./Components/DistrictOverview"
 import {
   MapContainer,
   TileLayer,
@@ -9,12 +9,14 @@ import {
   GeoJSON,
   Polygon,
   Tooltip,
-} from "react-leaflet";
-import { ugandaDistricts } from "./Data/uganda_districts.js";
-import React, { useEffect, useState } from "react";
-import { useMap, useMapEvent } from "react-leaflet/hooks";
-import { populationDistrict } from "./Data/populationData_districts";
-import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district";
+  LayersControl,
+} from "react-leaflet"
+import { ugandaDistricts } from "./Data/uganda_districts_cl.js"
+import { ugandaSubcounties } from "./Data/subcounties.js"
+import React, { useEffect, useState } from "react"
+import { useMap, useMapEvent } from "react-leaflet/hooks"
+import { populationDistrict } from "./Data/populationData_districts"
+import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district"
 
 import {
   Container,
@@ -28,39 +30,39 @@ import {
   TextField,
   IconButton,
   List,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+} from "@mui/material"
+import { styled } from "@mui/material/styles"
+import SearchIcon from "@mui/icons-material/Search"
+import Accordion from "@mui/material/Accordion"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
-import MuiDrawer from "@mui/material/Drawer";
+import MuiDrawer from "@mui/material/Drawer"
 
 function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
+  const { innerWidth: width, innerHeight: height } = window
   return {
     width,
     height,
-  };
+  }
 }
 
 function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
-  );
+  )
 
   useEffect(() => {
     function handleResize() {
-      setWindowDimensions(getWindowDimensions());
+      setWindowDimensions(getWindowDimensions())
     }
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
-  return windowDimensions;
+  return windowDimensions
 }
 
 const UnToggleBtn = styled(ToggleButton)(({ selectedcolor }) => ({
@@ -73,7 +75,7 @@ const UnToggleBtn = styled(ToggleButton)(({ selectedcolor }) => ({
     color: "white",
     backgroundColor: selectedcolor ? selectedcolor : "#A7A7A7",
   },
-}));
+}))
 
 const BtnAccordion = styled(Accordion)(() => ({
   border: `1px solid #C1C1C1`,
@@ -86,7 +88,7 @@ const BtnAccordion = styled(Accordion)(() => ({
   "&.Mui-expanded": {
     margin: "0px 0px",
   },
-}));
+}))
 
 const UnButton = styled(Button)(() => ({
   border: `1px solid #C1C1C1`,
@@ -102,29 +104,29 @@ const UnButton = styled(Button)(() => ({
   "&:last-child": {
     borderBottom: `1px solid #C1C1C1`,
   },
-}));
+}))
 
 function App() {
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedThreat, setSelectedThreat] = useState("drought");
+  const [selectedDistrict, setSelectedDistrict] = useState("")
+  const [selectedThreat, setSelectedThreat] = useState("drought")
 
   const startingBounds = [
     [4.226101095480792, 34.61213931437568],
     [-1.4465324972187859, 29.51102531366363],
-  ];
+  ]
 
-  const { height, width } = useWindowDimensions();
+  const { height, width } = useWindowDimensions()
 
   const hazardArray = [
     { name: "drought", color: "#E09C4C" },
     { name: "heatwave", color: "#C33030" },
     { name: "flood", color: "#387EE6" },
     { name: "landslide", color: "#836436" },
-  ];
-  const [hazard, setHazard] = useState("drought");
+  ]
+  const [hazard, setHazard] = useState("drought")
   const handleHazardChange = (event, newHazard) => {
-    setHazard(newHazard);
-  };
+    setHazard(newHazard)
+  }
 
   const cropsArray = [
     "Banana",
@@ -139,45 +141,45 @@ function App() {
     "Sugar Cane",
     "Tea",
     "Rice",
-  ];
+  ]
   const handleCropsChange = (event, newCrops) => {
-    setSector(newCrops);
-  };
+    setSector(newCrops)
+  }
 
-  const timeArray = ["2020", "2030", "2050"];
-  const [time, setTime] = useState("2020");
+  const timeArray = ["2020", "2030", "2050"]
+  const [time, setTime] = useState("2020")
   const handleTimeChange = (event, newTime) => {
-    setTime(newTime);
-  };
+    setTime(newTime)
+  }
 
-  const [population, setPopulation] = useState("hide");
+  const [population, setPopulation] = useState("hide")
   const handlePopulationChange = (event, newPopulation) => {
-    setPopulation(newPopulation);
-  };
+    setPopulation(newPopulation)
+  }
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false)
 
   const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+    setExpanded(isExpanded ? panel : false)
+  }
 
-  const [sector, setSector] = useState(null);
+  const [sector, setSector] = useState(null)
 
   const handleSetSector = (btnName) => {
-    console.log("btnName", btnName);
+    console.log("btnName", btnName)
     if (btnName === sector) {
-      setSector(null);
-    } else setSector(btnName);
-  };
+      setSector(null)
+    } else setSector(btnName)
+  }
 
   // Just drawer things
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(true)
 
   const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
+    setDrawerOpen(!drawerOpen)
+  }
 
-  const drawerWidth = "100%";
+  const drawerWidth = "100%"
 
   const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
@@ -202,13 +204,13 @@ function App() {
         },
       }),
     },
-  }));
+  }))
 
   useEffect(() => {
     if (selectedDistrict !== "") {
-      setDrawerOpen(false);
-    } else setDrawerOpen(true);
-  }, [selectedDistrict]);
+      setDrawerOpen(false)
+    } else setDrawerOpen(true)
+  }, [selectedDistrict])
 
   return (
     <Box>
@@ -618,19 +620,21 @@ function App() {
                 attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
                 url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
               />
-
-              <LayerHandling
-                selectedThreat={selectedThreat}
-                population={populationDistrict}
-                data={ugandaDistricts}
-                bounds={startingBounds}
-                selectedDistrict={selectedDistrict}
-                setSelectedDistrict={setSelectedDistrict}
-                sectorThreat={sectorThreat_agriculture_district}
-                selectedTimeScale={time}
-                populationToggle={population}
-                sectorSelector={sector}
-              />
+              <LayersControl position="topright">
+                <LayerHandling
+                  selectedThreat={selectedThreat}
+                  population={populationDistrict}
+                  districtGeom={ugandaDistricts}
+                  subcounties={ugandaSubcounties}
+                  bounds={startingBounds}
+                  selectedDistrict={selectedDistrict}
+                  setSelectedDistrict={setSelectedDistrict}
+                  sectorThreat={sectorThreat_agriculture_district}
+                  selectedTimeScale={time}
+                  populationToggle={population}
+                  sectorSelector={sector}
+                />
+              </LayersControl>
             </MapContainer>
           </Grid>
 
@@ -652,7 +656,7 @@ function App() {
         </Grid>
       </Container>
     </Box>
-  );
+  )
 }
 
-export default App;
+export default App
