@@ -1,22 +1,9 @@
 import "./App.css"
-import LayerHandling from "./Components/LayerHandling"
 import DistrictOverview from "./Components/DistrictOverview"
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  GeoJSON,
-  Polygon,
-  Tooltip,
-  LayersControl,
-} from "react-leaflet"
-import { ugandaDistricts } from "./Data/uganda_districts_cl.js"
-import { ugandaSubcounties } from "./Data/subcounties.js"
 import React, { useEffect, useState } from "react"
-import { useMap, useMapEvent } from "react-leaflet/hooks"
 import { populationDistrict } from "./Data/populationData_districts"
 import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district"
+import UgandaMap from "./Components/UgandaMap"
 
 import {
   Container,
@@ -110,11 +97,6 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState("")
   const [selectedThreat, setSelectedThreat] = useState("drought")
 
-  const startingBounds = [
-    [4.226101095480792, 34.61213931437568],
-    [-1.4465324972187859, 29.51102531366363],
-  ]
-
   const { height, width } = useWindowDimensions()
 
   const hazardArray = [
@@ -146,8 +128,8 @@ function App() {
     setSector(newCrops)
   }
 
-  const timeArray = ["2020", "2030", "2050"]
-  const [time, setTime] = useState("2020")
+  const timeArray = ["2025", "2030", "2050"]
+  const [time, setTime] = useState("2025")
   const handleTimeChange = (event, newTime) => {
     setTime(newTime)
   }
@@ -609,33 +591,16 @@ function App() {
 
           {/* M A P */}
           <Grid item xs={drawerOpen ? 8.5 : 5} sx={{ height: height }}>
-            <MapContainer
-              bounds={startingBounds}
-              scrollWheelZoom={false}
-              dragging={true}
-              doubleClickZoom={false}
-              zoomControl={false}
-            >
-              <TileLayer
-                attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
-                url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
-              />
-              <LayersControl position="topright">
-                <LayerHandling
-                  selectedThreat={selectedThreat}
-                  population={populationDistrict}
-                  districtGeom={ugandaDistricts}
-                  subcounties={ugandaSubcounties}
-                  bounds={startingBounds}
-                  selectedDistrict={selectedDistrict}
-                  setSelectedDistrict={setSelectedDistrict}
-                  sectorThreat={sectorThreat_agriculture_district}
-                  selectedTimeScale={time}
-                  populationToggle={population}
-                  sectorSelector={sector}
-                />
-              </LayersControl>
-            </MapContainer>
+            <UgandaMap
+              hazardArray={hazardArray}
+              populationDistrict={populationDistrict}
+              population={population}
+              sectorThreat={sectorThreat_agriculture_district}
+              sector={sector}
+              time={time}
+              selectedDistrict={selectedDistrict}
+              setSelectedDistrict={setSelectedDistrict}
+            ></UgandaMap>
           </Grid>
 
           {/* S E A R C H */}
