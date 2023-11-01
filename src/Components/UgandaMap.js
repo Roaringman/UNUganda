@@ -1,9 +1,8 @@
-import { MapContainer, TileLayer, LayersControl } from "react-leaflet"
+import { TileLayer } from "react-leaflet"
 import { ugandaDistricts } from "../Data/uganda_districts_cl.js"
 import { ugandaSubcounties } from "../Data/subcounties_final.js"
 import LayerHandling from "../Components/LayerHandling"
 import { useMap, useMapEvent } from "react-leaflet/hooks"
-import { useRef } from "react"
 
 function UgandaMap(props) {
   const hazardArray = props.hazardArray
@@ -15,43 +14,33 @@ function UgandaMap(props) {
   const selectedDistrict = props.selectedDistrict
   const setSelectedDistrict = props.setSelectedDistrict
   const selectedThreat = props.selectedThreat
-  let refLayer = useRef(0)
-
-  const startingBounds = [
-    [4.226101095480792, 34.61213931437568],
-    [-1.4465324972187859, 29.51102531366363],
-  ]
+  const filteredCounties = props.filteredCounties
+  const setFilteredCounties = props.setFilteredCounties
+  const startingBounds = props.startingBounds
 
   return (
     <>
-      <MapContainer
-        bounds={startingBounds}
-        scrollWheelZoom={true}
-        dragging={true}
-        doubleClickZoom={false}
-        zoomControl={true}
-      >
-        <TileLayer
-          attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
-          url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
-        />
+      <TileLayer
+        attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+        url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
+      />
 
-        <LayerHandling
-          selectedThreat={selectedThreat}
-          populationDistrict={populationDistrict}
-          districtGeom={ugandaDistricts}
-          subcounties={ugandaSubcounties}
-          startingBounds={startingBounds}
-          selectedDistrict={selectedDistrict}
-          setSelectedDistrict={setSelectedDistrict}
-          sectorThreat={sectorThreat}
-          selectedTimeScale={time}
-          population={population}
-          sectorSelector={sector}
-          key={selectedThreat}
-          ref={refLayer}
-        />
-      </MapContainer>
+      <LayerHandling
+        selectedThreat={selectedThreat}
+        populationDistrict={populationDistrict}
+        districtGeom={ugandaDistricts}
+        subcounties={ugandaSubcounties}
+        startingBounds={startingBounds}
+        selectedDistrict={selectedDistrict}
+        setSelectedDistrict={setSelectedDistrict}
+        sectorThreat={sectorThreat}
+        selectedTimeScale={time}
+        population={population}
+        sectorSelector={sector}
+        key={selectedThreat}
+        filteredCounties={filteredCounties}
+        setFilteredCounties={setFilteredCounties}
+      />
     </>
   )
 }

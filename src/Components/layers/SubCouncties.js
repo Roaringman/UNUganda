@@ -37,6 +37,7 @@ function SubCounties(props) {
                     opacity: 1,
                     dashArray: 3,
                     color: "white",
+                    key: subcounty.properties.Subcounty,
                   }}
                   positions={coordinates}
                   key={subcounty.properties.OBJECTID}

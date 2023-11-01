@@ -1,9 +1,10 @@
 import "./App.css"
 import DistrictOverview from "./Components/DistrictOverview"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { populationDistrict } from "./Data/populationData_districts"
 import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district"
 import UgandaMap from "./Components/UgandaMap"
+import { MapContainer } from "react-leaflet"
 
 import {
   Container,
@@ -96,9 +97,10 @@ const UnButton = styled(Button)(() => ({
 function App() {
   const [selectedDistrict, setSelectedDistrict] = useState("")
   const [selectedThreat, setSelectedThreat] = useState("drought")
-
   const { height, width } = useWindowDimensions()
 
+  const [filteredCounties, setFilteredCounties] = useState([])
+  const [mapBounds, setMapBounds] = useState([])
   const hazardArray = [
     { name: "drought", color: "#E09C4C" },
     { name: "heatwave", color: "#C33030" },
@@ -109,6 +111,16 @@ function App() {
   const handleHazardChange = (event, newHazard) => {
     setHazard(newHazard)
   }
+
+  const startingBounds = [
+    [4.226101095480792, 10.61213931437568],
+    [-1.4465324972187859, 40.51102531366363],
+  ]
+
+  const MaxBounds = [
+    [-4.718618, 22.998046],
+    [8.020438, 41.103515],
+  ]
 
   const cropsArray = [
     "Banana",
@@ -143,6 +155,7 @@ function App() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false)
+    console.log(expanded)
   }
 
   const [sector, setSector] = useState(null)
@@ -158,6 +171,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(true)
 
   const toggleDrawer = () => {
+    console.log("change")
     setDrawerOpen(!drawerOpen)
   }
 
@@ -251,7 +265,9 @@ function App() {
                         : hazardArray.map((threat) =>
                             threat.name === selectedThreat ? (
                               <UnToggleBtn
-                                onClick={() => setSelectedThreat(threat.name)}
+                                onClick={() => {
+                                  setSelectedThreat(threat.name)
+                                }}
                                 value={threat.name}
                                 sx={{ mr: 1 }}
                                 selectedcolor={threat.color}
@@ -591,17 +607,30 @@ function App() {
 
           {/* M A P */}
           <Grid item xs={drawerOpen ? 8.5 : 5} sx={{ height: height }}>
-            <UgandaMap
-              hazardArray={hazardArray}
-              populationDistrict={populationDistrict}
-              population={population}
-              sectorThreat={sectorThreat_agriculture_district}
-              sector={sector}
-              time={time}
-              selectedDistrict={selectedDistrict}
-              setSelectedDistrict={setSelectedDistrict}
-              selectedThreat={selectedThreat}
-            ></UgandaMap>
+            <MapContainer
+              bounds={startingBounds}
+              scrollWheelZoom={true}
+              dragging={true}
+              doubleClickZoom={false}
+              zoomControl={true}
+              maxBounds={MaxBounds}
+              minZoom={7}
+            >
+              <UgandaMap
+                hazardArray={hazardArray}
+                populationDistrict={populationDistrict}
+                population={population}
+                sectorThreat={sectorThreat_agriculture_district}
+                sector={sector}
+                time={time}
+                selectedDistrict={selectedDistrict}
+                setSelectedDistrict={setSelectedDistrict}
+                selectedThreat={selectedThreat}
+                filteredCounties={filteredCounties}
+                setFilteredCounties={setFilteredCounties}
+                startingBounds={startingBounds}
+              ></UgandaMap>
+            </MapContainer>
           </Grid>
 
           {/* S E A R C H */}
@@ -612,10 +641,15 @@ function App() {
           >
             {selectedDistrict.length > 0 && (
               <DistrictOverview
+                UnToggleBtn={UnToggleBtn}
+                setSelectedDistrict={setSelectedDistrict}
                 selectedThreat={selectedThreat}
                 districtName={selectedDistrict}
                 population={populationDistrict}
                 sectorThreat={sectorThreat_agriculture_district}
+                setFilteredCounties={setFilteredCounties}
+                filteredCounties={filteredCounties}
+                setMapBounds={setMapBounds}
               ></DistrictOverview>
             )}
           </Grid>

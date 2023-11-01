@@ -1,5 +1,5 @@
 import { LayersControl, LayerGroup } from "react-leaflet"
-import React, { useState, useEffect, useMemo, useRef } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { useMap, useMapEvent } from "react-leaflet/hooks"
 import Districts from "./layers/District"
 import SubCounties from "./layers/SubCouncties"
@@ -16,11 +16,11 @@ function LayerHandling(props) {
   const sectorThreat = props.sectorThreat
   const selectedDistrict = props.selectedDistrict
   const setSelectedDistrict = props.setSelectedDistrict
+  const filteredCounties = props.filteredCounties
+  const setFilteredCounties = props.setFilteredCounties
 
   const [districtName, setDistrictName] = useState()
-  const [filteredCounties, setFilteredCounties] = useState([])
   const [bounds, setBounds] = useState()
-  const mapRef = useRef()
 
   function capitalizeFirstLetter(word) {
     const firstLetter = word.charAt(0).toUpperCase()

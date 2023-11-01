@@ -6,9 +6,9 @@ import {
   GeoJSON,
   Polygon,
   Tooltip,
-} from "react-leaflet";
-import React, { useState, useEffect, useMemo } from "react";
-import { useMap, useMapEvent } from "react-leaflet/hooks";
+} from "react-leaflet"
+import React, { useState, useEffect, useMemo } from "react"
+import { useMap, useMapEvent } from "react-leaflet/hooks"
 
 import {
   Container,
@@ -23,15 +23,27 @@ import {
   IconButton,
   List,
   Divider,
-} from "@mui/material";
+} from "@mui/material"
 
 function DistrictOverview(props) {
   const districtData = props.population.filter(
     (districtData) => districtData.District.toUpperCase() === props.districtName
-  );
+  )
+
+  const UnToggleBtn = props.UnToggleBtn
   return (
     <Stack spacing={2} m={4}>
       <Grid container spacing={0}>
+        <ToggleButton> Zoom to District </ToggleButton>
+        <UnToggleBtn
+          onClick={() => {
+            props.setSelectedDistrict("")
+            props.setFilteredCounties([])
+          }}
+        >
+          {"Close"}
+        </UnToggleBtn>
+
         <Grid item xs={12} mb={2}>
           <Typography variant="h3">
             {props.districtName} {props.selectedThreat}
@@ -223,7 +235,7 @@ function DistrictOverview(props) {
         </Grid>
       </Grid>
     </Stack>
-  );
+  )
   /*
     return (
         <>
@@ -294,4 +306,4 @@ function DistrictOverview(props) {
     */
 }
 
-export default DistrictOverview;
+export default DistrictOverview
