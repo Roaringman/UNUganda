@@ -116,17 +116,27 @@ function Districts(props) {
                   </p>
                 </Tooltip>
               </Polygon>
-            ) : (
+            ) : selectedDistrict === district.properties.District ? null : (
               <Circle
-                weight={2}
-                fillColor={categoryColor(
-                  selectedThreat,
-                  district.properties[selectedThreat]
-                    ? district.properties[selectedThreat]
-                    : "none"
-                )}
+                weight={
+                  district.properties.District === selectedDistrict ? 0 : 2
+                }
+                fillColor={
+                  district.properties.District === selectedDistrict
+                    ? "transparent"
+                    : categoryColor(
+                        selectedThreat,
+                        district.properties[selectedThreat]
+                          ? district.properties[selectedThreat]
+                          : "none"
+                      )
+                }
                 fillOpacity={1}
-                color={"white"}
+                color={
+                  district.properties.District === selectedDistrict
+                    ? "transparent"
+                    : "white"
+                }
                 key={`${district.properties.District}-circle`}
                 radius={population[0] ? population[0].SUM_Population / 40 : 100}
                 center={center.geometry.coordinates}

@@ -26,10 +26,10 @@ function UgandaMap(props) {
     <>
       <MapContainer
         bounds={startingBounds}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
         dragging={true}
         doubleClickZoom={false}
-        zoomControl={false}
+        zoomControl={true}
       >
         <TileLayer
           attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
