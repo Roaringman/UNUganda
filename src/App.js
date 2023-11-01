@@ -600,6 +600,7 @@ function App() {
               time={time}
               selectedDistrict={selectedDistrict}
               setSelectedDistrict={setSelectedDistrict}
+              selectedThreat={selectedThreat}
             ></UgandaMap>
           </Grid>
 

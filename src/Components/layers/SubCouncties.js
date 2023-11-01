@@ -1,5 +1,6 @@
 import { Polygon, Tooltip, Circle, LayerGroup } from "react-leaflet"
 import React, { useState, useEffect, useMemo } from "react"
+import * as turf from "@turf/turf"
 
 function SubCounties(props) {
   const categoryColor = props.categoryColor
@@ -19,71 +20,136 @@ function SubCounties(props) {
           item[1],
           item[0],
         ])
-        return (
-          <>
-            <Polygon
-              pathOptions={{
-                fillColor: categoryColor(
-                  selectedThreat,
-                  subcounty.properties[selectedThreat]
-                ),
-                fillOpacity: 1,
-                weight: 2,
-                opacity: 1,
-                dashArray: 3,
-                color: "white",
-              }}
-              positions={coordinates}
-              key={subcounty.properties.OBJECTID}
-              eventHandlers={{
-                contextmenu: (e) => {
-                  setSelectedDistrict("")
-                  setFilteredCounties([])
-                  map.fitBounds(startingBounds)
-                },
-                click: (e) => {
-                  setSelectedDistrict("")
-                  setFilteredCounties([])
-                  map.fitBounds(startingBounds)
-                },
-                mouseover: (e) => {
-                  const layer = e.target
-                  layer.setStyle({
-                    dashArray: "",
-                    weight: 7,
-                    opacity: 1,
-                    color: "white",
-                  })
-                },
-                mouseout: (e) => {
-                  const layer = e.target
-                  layer.setStyle({
-                    weight: 2,
-                    dashArray: "3",
-                    color: "white",
+        if (coordinates.length >= 4) {
+          const polygon = turf.polygon([coordinates])
+          const center = turf.centerOfMass(polygon)
+          return (
+            <>
+              {populationToggle !== "show" ? (
+                <Polygon
+                  pathOptions={{
                     fillColor: categoryColor(
                       selectedThreat,
                       subcounty.properties[selectedThreat]
                     ),
-                  })
-                },
-              }}
-            >
-              <Tooltip>
-                <h3>{capitalizeFirstLetter(subcounty.properties.Subcounty)}</h3>
-                <p>
-                  {`${capitalizeFirstLetter(selectedThreat)} threat : ${
-                    subcounty.properties[selectedThreat]
-                      ? capitalizeFirstLetter(
+                    fillOpacity: 1,
+                    weight: 2,
+                    opacity: 1,
+                    dashArray: 3,
+                    color: "white",
+                  }}
+                  positions={coordinates}
+                  key={subcounty.properties.OBJECTID}
+                  eventHandlers={{
+                    contextmenu: (e) => {
+                      setSelectedDistrict("")
+                      setFilteredCounties([])
+                      map.fitBounds(startingBounds)
+                    },
+                    click: (e) => {
+                      setSelectedDistrict("")
+                      setFilteredCounties([])
+                      map.fitBounds(startingBounds)
+                    },
+                    mouseover: (e) => {
+                      const layer = e.target
+                      layer.setStyle({
+                        dashArray: "",
+                        weight: 7,
+                        opacity: 1,
+                        color: "white",
+                      })
+                    },
+                    mouseout: (e) => {
+                      const layer = e.target
+                      layer.setStyle({
+                        weight: 2,
+                        dashArray: "3",
+                        color: "white",
+                        fillColor: categoryColor(
+                          selectedThreat,
                           subcounty.properties[selectedThreat]
-                        )
-                      : "No data"
-                  }`}
-                </p>
-              </Tooltip>
-            </Polygon>
+                        ),
+                      })
+                    },
+                  }}
+                >
+                  <Tooltip>
+                    <h3>
+                      {capitalizeFirstLetter(subcounty.properties.Subcounty)}
+                    </h3>
+                    <p>
+                      {`${capitalizeFirstLetter(selectedThreat)} threat : ${
+                        subcounty.properties[selectedThreat]
+                          ? capitalizeFirstLetter(
+                              subcounty.properties[selectedThreat]
+                            )
+                          : "No data"
+                      }`}
+                    </p>
+                  </Tooltip>
+                </Polygon>
+              ) : (
+                <Circle
+                  weight={2}
+                  fillColor={categoryColor(
+                    selectedThreat,
+                    subcounty.properties[selectedThreat]
+                      ? subcounty.properties[selectedThreat]
+                      : "none"
+                  )}
+                  fillOpacity={1}
+                  color={"white"}
+                  key={`${subcounty.properties.Subcounty}-circle`}
+                  radius={
+                    subcounty.properties.Population
+                      ? subcounty.properties.Population / 20
+                      : 10
+                  }
+                  center={center.geometry.coordinates}
+                  eventHandlers={{
+                    mouseover: (e) => {
+                      const layer = e.target
+                      layer.setStyle({
+                        weight: 7,
+                        fillOpacity: 1,
+                        color: "white",
+                      })
+                    },
+                    mouseout: (e) => {
+                      const layer = e.target
+                      layer.setStyle({
+                        fillColor: categoryColor(
+                          selectedThreat,
+                          subcounty.properties[selectedThreat]
+                        ),
+                        weight: 2,
+                        color: "white",
+                      })
+                    },
+                  }}
+                >
+                  <Tooltip>
+                    {subcounty.properties.Population
+                      ? `${capitalizeFirstLetter(
+                          subcounty.properties.Subcounty
+                        )} population: ${subcounty.properties.Population}`
+                      : `${capitalizeFirstLetter(
+                          subcounty.properties.Subcounty
+                        )} no data`}
+                    <br />
+                    {`${capitalizeFirstLetter(selectedThreat)} threat : ${
+                      subcounty.properties[selectedThreat]
+                        ? capitalizeFirstLetter(
+                            subcounty.properties[selectedThreat]
+                          )
+                        : "No data"
+                    }`}
+                  </Tooltip>
+                </Circle>
+              )}
 
-            {/*populationToggle === "show" ? (
+              {/*populationToggle === "show" ? (
               <Circle
                 weight={1}
                 fillColor={"black"}
@@ -123,8 +189,9 @@ function SubCounties(props) {
                 center={center.geometry.coordinates}
               ></Circle>
             ) : null */}
-          </>
-        )
+            </>
+          )
+        }
       })}
     </>
   )
