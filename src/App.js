@@ -100,12 +100,11 @@ function App() {
   const { height, width } = useWindowDimensions()
 
   const [filteredCounties, setFilteredCounties] = useState([])
-  const [mapBounds, setMapBounds] = useState([])
   const hazardArray = [
-    { name: "drought", color: "#E09C4C" },
-    { name: "heatwave", color: "#C33030" },
-    { name: "flood", color: "#387EE6" },
-    { name: "landslide", color: "#836436" },
+    { name: "drought", color: "#a50f15" },
+    { name: "heatwave", color: "#7a0177" },
+    { name: "flood", color: "#08519c" },
+    { name: "landslide", color: "#993404" },
   ]
   const [hazard, setHazard] = useState("drought")
   const handleHazardChange = (event, newHazard) => {
@@ -113,14 +112,15 @@ function App() {
   }
 
   const startingBounds = [
-    [4.226101095480792, 10.61213931437568],
+    [4.226101095480792, 26.61213931437568],
     [-1.4465324972187859, 40.51102531366363],
   ]
 
   const MaxBounds = [
-    [-4.718618, 22.998046],
-    [8.020438, 41.103515],
+    [4.226101095480792, 10.61213931437568],
+    [-1.4465324972187859, 40.51102531366363],
   ]
+  const [zoomBounds, setZoomBounds] = useState(startingBounds)
 
   const cropsArray = [
     "Banana",
@@ -608,7 +608,7 @@ function App() {
           {/* M A P */}
           <Grid item xs={drawerOpen ? 8.5 : 5} sx={{ height: height }}>
             <MapContainer
-              bounds={startingBounds}
+              bounds={zoomBounds}
               scrollWheelZoom={true}
               dragging={true}
               doubleClickZoom={false}
@@ -629,6 +629,7 @@ function App() {
                 filteredCounties={filteredCounties}
                 setFilteredCounties={setFilteredCounties}
                 startingBounds={startingBounds}
+                zoomBounds={zoomBounds}
               ></UgandaMap>
             </MapContainer>
           </Grid>
@@ -649,7 +650,7 @@ function App() {
                 sectorThreat={sectorThreat_agriculture_district}
                 setFilteredCounties={setFilteredCounties}
                 filteredCounties={filteredCounties}
-                setMapBounds={setMapBounds}
+                setZoomBounds={setZoomBounds}
               ></DistrictOverview>
             )}
           </Grid>

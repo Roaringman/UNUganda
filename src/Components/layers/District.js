@@ -20,6 +20,7 @@ function Districts(props) {
   const setFilteredCounties = props.setFilteredCounties
   const setSelectedDistrict = props.setSelectedDistrict
   const capitalizeFirstLetter = props.capitalizeFirstLetter
+  const shortToLongThreat = props.shortToLongThreat
   return (
     <>
       {districts.features
@@ -106,11 +107,9 @@ function Districts(props) {
                 <Tooltip>
                   <h3>{capitalizeFirstLetter(district.properties.District)}</h3>
                   <p>
-                    {`${capitalizeFirstLetter(selectedThreat)} threat : ${
-                      district.properties[selectedThreat]
-                        ? capitalizeFirstLetter(
-                            district.properties[selectedThreat]
-                          )
+                    {`${capitalizeFirstLetter(selectedThreat)} threat: ${
+                      shortToLongThreat(district.properties[selectedThreat])
+                        ? shortToLongThreat(district.properties[selectedThreat])
                         : "No data"
                     }`}
                   </p>
@@ -181,11 +180,9 @@ function Districts(props) {
                         district.properties.District
                       )} no data`}
                   <br />
-                  {`${capitalizeFirstLetter(selectedThreat)} threat : ${
+                  {`${capitalizeFirstLetter(selectedThreat)} threat: ${
                     district.properties[selectedThreat]
-                      ? capitalizeFirstLetter(
-                          district.properties[selectedThreat]
-                        )
+                      ? shortToLongThreat(district.properties[selectedThreat])
                       : "No data"
                   }`}
                 </Tooltip>

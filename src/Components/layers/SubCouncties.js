@@ -12,6 +12,7 @@ function SubCounties(props) {
   const setSelectedDistrict = props.setSelectedDistrict
   const populationToggle = props.population
   const capitalizeFirstLetter = props.capitalizeFirstLetter
+  const shortToLongThreat = props.shortToLongThreat
 
   return (
     <>
@@ -80,9 +81,9 @@ function SubCounties(props) {
                       {capitalizeFirstLetter(subcounty.properties.Subcounty)}
                     </h3>
                     <p>
-                      {`${capitalizeFirstLetter(selectedThreat)} threat : ${
+                      {`${capitalizeFirstLetter(selectedThreat)} threat: ${
                         subcounty.properties[selectedThreat]
-                          ? capitalizeFirstLetter(
+                          ? shortToLongThreat(
                               subcounty.properties[selectedThreat]
                             )
                           : "No data"
@@ -139,9 +140,9 @@ function SubCounties(props) {
                           subcounty.properties.Subcounty
                         )} no data`}
                     <br />
-                    {`${capitalizeFirstLetter(selectedThreat)} threat : ${
+                    {`${capitalizeFirstLetter(selectedThreat)} threat: ${
                       subcounty.properties[selectedThreat]
-                        ? capitalizeFirstLetter(
+                        ? shortToLongThreat(
                             subcounty.properties[selectedThreat]
                           )
                         : "No data"

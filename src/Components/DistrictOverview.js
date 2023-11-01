@@ -9,6 +9,7 @@ import {
 } from "react-leaflet"
 import React, { useState, useEffect, useMemo } from "react"
 import { useMap, useMapEvent } from "react-leaflet/hooks"
+import * as turf from "@turf/turf"
 
 import {
   Container,
@@ -29,12 +30,12 @@ function DistrictOverview(props) {
   const districtData = props.population.filter(
     (districtData) => districtData.District.toUpperCase() === props.districtName
   )
+  const setZoomBounds = props.setZoomBounds
 
   const UnToggleBtn = props.UnToggleBtn
   return (
     <Stack spacing={2} m={4}>
       <Grid container spacing={0}>
-        <ToggleButton> Zoom to District </ToggleButton>
         <UnToggleBtn
           onClick={() => {
             props.setSelectedDistrict("")

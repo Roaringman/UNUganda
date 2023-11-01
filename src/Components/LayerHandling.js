@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react"
 import { useMap, useMapEvent } from "react-leaflet/hooks"
 import Districts from "./layers/District"
 import SubCounties from "./layers/SubCouncties"
+import Legend from "./Legend"
 
 function LayerHandling(props) {
   const districts = props.districtGeom
@@ -18,6 +19,9 @@ function LayerHandling(props) {
   const setSelectedDistrict = props.setSelectedDistrict
   const filteredCounties = props.filteredCounties
   const setFilteredCounties = props.setFilteredCounties
+  const zoomBounds = props.zoomBounds
+
+  const map = useMap()
 
   const [districtName, setDistrictName] = useState()
   const [bounds, setBounds] = useState()
@@ -70,6 +74,30 @@ function LayerHandling(props) {
     return categoryColor
   }
 
+  function shortToLongThreat(shortName) {
+    switch (shortName) {
+      case "N":
+        return "No Threat"
+      case "VL":
+        return "Very Low"
+      case "L":
+        return "Low"
+      case "M":
+        return "Medium"
+      case "H":
+        return "High"
+      case "VH":
+        return "Very High"
+      default:
+        console.log(`No such short name ${shortName}`)
+    }
+  }
+
+  /* var tempBounds = zoomBounds
+  if (zoomBounds === tempBounds) {
+    map.fitBounds(zoomBounds)
+  }*/
+
   function filterSubcounties(district, subcounties) {
     let filteredSubcounties = []
 
@@ -81,7 +109,6 @@ function LayerHandling(props) {
   }
 
   const sectorRiskColor = ["#7DE1AB", "#FDFF89", "#FA3A7F"]
-  const map = useMap()
   return selectedThreat === "drought" ? (
     <>
       <Districts
@@ -102,6 +129,7 @@ function LayerHandling(props) {
         setSelectedDistrict={setSelectedDistrict}
         selectedDistrict={selectedDistrict}
         bounds={bounds}
+        shortToLongThreat={shortToLongThreat}
       ></Districts>
       <SubCounties
         selectedThreat={selectedThreat}
@@ -113,6 +141,7 @@ function LayerHandling(props) {
         setFilteredCounties={setFilteredCounties}
         categoryColor={categoryColor}
         capitalizeFirstLetter={capitalizeFirstLetter}
+        shortToLongThreat={shortToLongThreat}
       ></SubCounties>
     </>
   ) : (
@@ -135,6 +164,7 @@ function LayerHandling(props) {
         setSelectedDistrict={setSelectedDistrict}
         selectedDistrict={selectedDistrict}
         bounds={bounds}
+        shortToLongThreat={shortToLongThreat}
       ></Districts>
       <SubCounties
         selectedThreat={selectedThreat}
@@ -146,6 +176,7 @@ function LayerHandling(props) {
         setFilteredCounties={setFilteredCounties}
         categoryColor={categoryColor}
         capitalizeFirstLetter={capitalizeFirstLetter}
+        shortToLongThreat={shortToLongThreat}
       ></SubCounties>
     </>
   )

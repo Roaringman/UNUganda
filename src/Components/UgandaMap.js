@@ -1,8 +1,9 @@
 import { TileLayer } from "react-leaflet"
-import { ugandaDistricts } from "../Data/uganda_districts_cl.js"
+import { ugandaDistricts } from "../Data/UgDistDisSImp_DFHL_final.js"
 import { ugandaSubcounties } from "../Data/subcounties_final.js"
 import LayerHandling from "../Components/LayerHandling"
 import { useMap, useMapEvent } from "react-leaflet/hooks"
+import Legend from "./Legend.js"
 
 function UgandaMap(props) {
   const hazardArray = props.hazardArray
@@ -17,12 +18,16 @@ function UgandaMap(props) {
   const filteredCounties = props.filteredCounties
   const setFilteredCounties = props.setFilteredCounties
   const startingBounds = props.startingBounds
+  const zoomBounds = props.zoomBounds
 
   return (
     <>
       <TileLayer
-        attribution='&copy; Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
-        url="https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
+        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>
+        &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a>
+        &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>
+        &copy; <a href="https://www.openstreetmap.org/about/" target="_blank">OpenStreetMap contributors</a>'
+        url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.jpg"
       />
 
       <LayerHandling
@@ -40,6 +45,7 @@ function UgandaMap(props) {
         key={selectedThreat}
         filteredCounties={filteredCounties}
         setFilteredCounties={setFilteredCounties}
+        zoomBounds={zoomBounds}
       />
     </>
   )
