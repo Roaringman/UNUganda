@@ -614,7 +614,7 @@ function App() {
               doubleClickZoom={false}
               zoomControl={true}
               maxBounds={MaxBounds}
-              minZoom={7}
+              minZoom={8}
             >
               <UgandaMap
                 hazardArray={hazardArray}
