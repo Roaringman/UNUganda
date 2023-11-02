@@ -36,7 +36,7 @@ function LayerHandling(props) {
   function categoryColor(threat, level) {
     const colors = {
       flood: {
-        N: "#ffffff",
+        N: "#C3D6BF",
         VL: "#eff3ff",
         L: "#bdd7e7",
         M: "#6baed6",
@@ -49,7 +49,7 @@ function LayerHandling(props) {
         M: "#f768a1",
         H: "#c51b8a",
         VH: "#7a0177",
-        N: "#ffffff",
+        N: "#C3D6BF",
       },
       drought: {
         VL: "#fee5d9",
@@ -57,10 +57,10 @@ function LayerHandling(props) {
         M: "#fb6a4a",
         H: "#de2d26",
         VH: "#a50f15",
-        N: "#ffffff",
+        N: "#C3D6BF",
       },
       landslide: {
-        N: "#ffffff",
+        N: "#C3D6BF",
         VL: "#ffffd4",
         L: "#fed98e",
         M: "#fe9929",
