@@ -105,7 +105,9 @@ function Districts(props) {
                 }}
               >
                 <Tooltip>
-                  <h3>{capitalizeFirstLetter(district.properties.District)}</h3>
+                  <h3>{`District ${capitalizeFirstLetter(
+                    district.properties.District
+                  )}`}</h3>
                   <p>
                     {`${capitalizeFirstLetter(selectedThreat)} threat: ${
                       shortToLongThreat(district.properties[selectedThreat])
@@ -173,7 +175,7 @@ function Districts(props) {
               >
                 <Tooltip>
                   {population[0]
-                    ? `${capitalizeFirstLetter(
+                    ? `District ${capitalizeFirstLetter(
                         district.properties.District
                       )} population: ${population[0].SUM_Population}`
                     : `${capitalizeFirstLetter(

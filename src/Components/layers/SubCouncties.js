@@ -78,7 +78,9 @@ function SubCounties(props) {
                 >
                   <Tooltip>
                     <h3>
-                      {capitalizeFirstLetter(subcounty.properties.Subcounty)}
+                      {`Subcounty ${capitalizeFirstLetter(
+                        subcounty.properties.Subcounty
+                      )}`}
                     </h3>
                     <p>
                       {`${capitalizeFirstLetter(selectedThreat)} threat: ${
@@ -133,7 +135,7 @@ function SubCounties(props) {
                 >
                   <Tooltip>
                     {subcounty.properties.Population
-                      ? `${capitalizeFirstLetter(
+                      ? `Subcounty ${capitalizeFirstLetter(
                           subcounty.properties.Subcounty
                         )} population: ${subcounty.properties.Population}`
                       : `${capitalizeFirstLetter(
