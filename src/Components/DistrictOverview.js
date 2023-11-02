@@ -51,6 +51,20 @@ function DistrictOverview(props) {
           </Typography>
         </Grid>
 
+        <Grid
+          item
+          xs={12}
+          sx={{ borderRight: "1px solid rgba(0, 0, 0, 0.12)" }}
+        >
+          {" "}
+          <Stack spacing={7} px={2} py={2}>
+            <Typography variant="h6" color={"#de2d26"}>
+              Disclaimer: The data on this page was created for demonstration
+              purposes only and does not represent reality.
+            </Typography>
+          </Stack>
+        </Grid>
+
         <Grid item xs={6} sx={{ borderRight: "1px solid rgba(0, 0, 0, 0.12)" }}>
           <Stack spacing={3} px={2}>
             <Typography variant="h5" sx={{ textTransform: "uppercase" }}>

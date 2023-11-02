@@ -550,6 +550,8 @@ function App() {
                   )}
                 </Grid>
 
+                {/* Disclaimer */}
+
                 {/* SEARCH 
                 <Grid container spacing={0}>
                   {drawerOpen ? (
