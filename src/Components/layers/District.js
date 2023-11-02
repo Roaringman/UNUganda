@@ -210,7 +210,7 @@ function Districts(props) {
                   }
                   center={center.geometry.coordinates}
                 ></Circle>
-              ) : null}*/
+              ) : null} */
           }
         })}
     </>

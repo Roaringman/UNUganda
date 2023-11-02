@@ -117,8 +117,8 @@ function App() {
   ]
 
   const MaxBounds = [
-    [4.226101095480792, 10.61213931437568],
-    [-1.4465324972187859, 40.51102531366363],
+    [4.226101095480792, 20.61213931437568],
+    [-1.4465324972187859, 50.51102531366363],
   ]
   const [zoomBounds, setZoomBounds] = useState(startingBounds)
 
@@ -616,7 +616,7 @@ function App() {
               doubleClickZoom={false}
               zoomControl={true}
               maxBounds={MaxBounds}
-              minZoom={8}
+              minZoom={7}
             >
               <UgandaMap
                 hazardArray={hazardArray}
