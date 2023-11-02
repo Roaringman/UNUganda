@@ -89,7 +89,7 @@ function LayerHandling(props) {
       case "VH":
         return "Very High"
       default:
-        console.log(`No such short name ${shortName}`)
+        return null
     }
   }
 
