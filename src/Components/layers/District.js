@@ -1,6 +1,7 @@
 import { Polygon, Tooltip, Circle } from "react-leaflet"
 import React from "react"
 import * as turf from "@turf/turf"
+import { signal, computed } from "@preact/signals"
 
 function Districts(props) {
   const districts = props.districts
@@ -13,7 +14,8 @@ function Districts(props) {
   const sectorRiskColor = props.sectorRiskColor
   const subcounties = props.subcounties
   const selectedDistrict = props.selectedDistrict
-  const bounds = props.bounds
+  const zoomBounds = props.zoomBounds
+  const zoomToBounds = props.zoomToBounds
 
   const categoryColor = props.categoryColor
   const filterSubcounties = props.filterSubcounties
@@ -21,6 +23,12 @@ function Districts(props) {
   const setSelectedDistrict = props.setSelectedDistrict
   const capitalizeFirstLetter = props.capitalizeFirstLetter
   const shortToLongThreat = props.shortToLongThreat
+
+  const zoom = computed(() => {
+    console.log(zoomToBounds.value)
+    zoomToBounds && map.fitBounds(zoomBounds.value)
+  })
+
   return (
     <>
       {districts.features
@@ -64,16 +72,19 @@ function Districts(props) {
                       ? 0.2
                       : 1,
                   weight: 2,
-                  opacity:
-                    district.properties.District === selectedDistrict ? 0.2 : 1,
                   dashArray: 1,
                   color: "white",
+                  fill:
+                    district.properties.District === selectedDistrict
+                      ? false
+                      : true,
                 }}
                 key={district.properties.District}
                 positions={coordinates}
                 eventHandlers={{
                   mouseover: (e) => {
                     const layer = e.target
+                    layer.bringToFront()
                     layer.setStyle({
                       weight: 7,
                       fillOpacity: 1,
@@ -93,12 +104,16 @@ function Districts(props) {
                     filterSubcounties(district, subcounties)
                   },
                   click: (e) => {
+                    const layer = e.target
+                    layer.setStyle({})
                     if (district.properties.District === selectedDistrict) {
                       setSelectedDistrict("")
                       setFilteredCounties([])
-                      //map.fitBounds(bounds)
                     } else {
                       setSelectedDistrict(district.properties.District)
+                      zoomBounds.value = e.target.getBounds()
+                      //return zoom.value
+
                       //map.fitBounds(e.target.getBounds())
                     }
                   },

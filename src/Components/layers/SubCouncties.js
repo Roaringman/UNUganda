@@ -64,6 +64,7 @@ function SubCounties(props) {
                     },
                     mouseout: (e) => {
                       const layer = e.target
+
                       layer.setStyle({
                         weight: 2,
                         dashArray: "3",
@@ -114,6 +115,7 @@ function SubCounties(props) {
                   eventHandlers={{
                     mouseover: (e) => {
                       const layer = e.target
+                      layer.bringToFront()
                       layer.setStyle({
                         weight: 7,
                         fillOpacity: 1,

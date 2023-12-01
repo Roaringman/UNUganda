@@ -20,8 +20,11 @@ function LayerHandling(props) {
   const filteredCounties = props.filteredCounties
   const setFilteredCounties = props.setFilteredCounties
   const zoomBounds = props.zoomBounds
+  const zoomToBounds = props.zoomToBounds
 
-  const map = useMap()
+  const categoryColor = props.categoryColor
+
+  const map = props.map
 
   const [districtName, setDistrictName] = useState()
   const [bounds, setBounds] = useState()
@@ -31,47 +34,6 @@ function LayerHandling(props) {
     const remaining = word.slice(1).toLowerCase()
 
     return firstLetter + remaining
-  }
-
-  function categoryColor(threat, level) {
-    const colors = {
-      flood: {
-        N: "#C3D6BF",
-        VL: "#eff3ff",
-        L: "#bdd7e7",
-        M: "#6baed6",
-        H: "#3182bd",
-        VH: "#08519c",
-      },
-      heatwave: {
-        VL: "#feebe2",
-        L: "#fbb4b9",
-        M: "#f768a1",
-        H: "#c51b8a",
-        VH: "#7a0177",
-        N: "#C3D6BF",
-      },
-      drought: {
-        VL: "#fee5d9",
-        L: "#fcae91",
-        M: "#fb6a4a",
-        H: "#de2d26",
-        VH: "#a50f15",
-        N: "#C3D6BF",
-      },
-      landslide: {
-        N: "#C3D6BF",
-        VL: "#ffffd4",
-        L: "#fed98e",
-        M: "#fe9929",
-        H: "#d95f0e",
-        VH: "#993404",
-      },
-    }
-    const categoryColor = colors[`${threat}`][`${level}`]
-      ? colors[`${threat}`][`${level}`]
-      : "transparent"
-    return categoryColor
   }
 
   function shortToLongThreat(shortName) {
@@ -128,7 +90,8 @@ function LayerHandling(props) {
         capitalizeFirstLetter={capitalizeFirstLetter}
         setSelectedDistrict={setSelectedDistrict}
         selectedDistrict={selectedDistrict}
-        bounds={bounds}
+        zoomBounds={zoomBounds}
+        zoomToBounds={zoomToBounds}
         shortToLongThreat={shortToLongThreat}
       ></Districts>
       <SubCounties

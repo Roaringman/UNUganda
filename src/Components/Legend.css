@@ -1,0 +1,18 @@
+.info {
+  padding: 12px 16px;
+  margin: 12px;
+  font:
+    14px/16px Arial,
+    Helvetica,
+    sans-serif;
+  background: white;
+  border-radius: 5px;
+  height: 200px;
+  width: 380px;
+}
+
+.legend {
+  text-align: left;
+  line-height: 18px;
+  color: #555;
+}

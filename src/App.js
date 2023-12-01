@@ -1,10 +1,11 @@
 import "./App.css"
 import DistrictOverview from "./Components/DistrictOverview"
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import { populationDistrict } from "./Data/populationData_districts"
 import { sectorThreat_agriculture_district } from "./Data/sectorThreat_agriculture_district"
 import UgandaMap from "./Components/UgandaMap"
 import { MapContainer } from "react-leaflet"
+import { signal } from "@preact/signals"
 
 import {
   Container,
@@ -100,6 +101,7 @@ function App() {
   const { height, width } = useWindowDimensions()
 
   const [filteredCounties, setFilteredCounties] = useState([])
+
   const hazardArray = [
     { name: "drought", color: "#a50f15" },
     { name: "heatwave", color: "#7a0177" },
@@ -120,7 +122,8 @@ function App() {
     [4.226101095480792, 20.61213931437568],
     [-1.4465324972187859, 50.51102531366363],
   ]
-  const [zoomBounds, setZoomBounds] = useState(startingBounds)
+  const zoomBounds = signal(startingBounds)
+  const zoomToBounds = signal(false)
 
   const cropsArray = [
     "Banana",
@@ -610,7 +613,7 @@ function App() {
           {/* M A P */}
           <Grid item xs={drawerOpen ? 8.5 : 5} sx={{ height: height }}>
             <MapContainer
-              bounds={zoomBounds}
+              bounds={zoomBounds.value}
               scrollWheelZoom={true}
               dragging={true}
               doubleClickZoom={false}
@@ -632,6 +635,7 @@ function App() {
                 setFilteredCounties={setFilteredCounties}
                 startingBounds={startingBounds}
                 zoomBounds={zoomBounds}
+                zoomToBounds={zoomToBounds}
               ></UgandaMap>
             </MapContainer>
           </Grid>
@@ -652,7 +656,7 @@ function App() {
                 sectorThreat={sectorThreat_agriculture_district}
                 setFilteredCounties={setFilteredCounties}
                 filteredCounties={filteredCounties}
-                setZoomBounds={setZoomBounds}
+                zoomToBounds={zoomToBounds}
               ></DistrictOverview>
             )}
           </Grid>

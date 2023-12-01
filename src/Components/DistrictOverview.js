@@ -30,7 +30,7 @@ function DistrictOverview(props) {
   const districtData = props.population.filter(
     (districtData) => districtData.District.toUpperCase() === props.districtName
   )
-  const setZoomBounds = props.setZoomBounds
+  const zoomToBounds = props.zoomToBounds
 
   const UnToggleBtn = props.UnToggleBtn
   return (
@@ -40,6 +40,7 @@ function DistrictOverview(props) {
           onClick={() => {
             props.setSelectedDistrict("")
             props.setFilteredCounties([])
+            zoomToBounds.value = false
           }}
         >
           {"Close"}

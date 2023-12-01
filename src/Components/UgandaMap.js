@@ -19,6 +19,50 @@ function UgandaMap(props) {
   const setFilteredCounties = props.setFilteredCounties
   const startingBounds = props.startingBounds
   const zoomBounds = props.zoomBounds
+  const zoomToBounds = props.zoomToBounds
+
+  const map = useMap()
+
+  function categoryColor(threat, level) {
+    const colors = {
+      flood: {
+        N: "#C3D6BF",
+        VL: "#eff3ff",
+        L: "#bdd7e7",
+        M: "#6baed6",
+        H: "#3182bd",
+        VH: "#08519c",
+      },
+      heatwave: {
+        VL: "#feebe2",
+        L: "#fbb4b9",
+        M: "#f768a1",
+        H: "#c51b8a",
+        VH: "#7a0177",
+        N: "#C3D6BF",
+      },
+      drought: {
+        VL: "#fee5d9",
+        L: "#fcae91",
+        M: "#fb6a4a",
+        H: "#de2d26",
+        VH: "#a50f15",
+        N: "#C3D6BF",
+      },
+      landslide: {
+        N: "#C3D6BF",
+        VL: "#ffffd4",
+        L: "#fed98e",
+        M: "#fe9929",
+        H: "#d95f0e",
+        VH: "#993404",
+      },
+    }
+    const categoryColor = colors[`${threat}`][`${level}`]
+      ? colors[`${threat}`][`${level}`]
+      : "transparent"
+    return categoryColor
+  }
 
   return (
     <>
@@ -46,6 +90,15 @@ function UgandaMap(props) {
         filteredCounties={filteredCounties}
         setFilteredCounties={setFilteredCounties}
         zoomBounds={zoomBounds}
+        zoomToBounds={zoomToBounds}
+        map={map}
+        categoryColor={categoryColor}
+      />
+      <Legend
+        map={map}
+        subcounties={ugandaSubcounties}
+        categoryColor={categoryColor}
+        selectedThreat={selectedThreat}
       />
     </>
   )
