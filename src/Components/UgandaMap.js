@@ -94,12 +94,12 @@ function UgandaMap(props) {
         map={map}
         categoryColor={categoryColor}
       />
-      <Legend
+      {/*<Legend
         map={map}
         subcounties={ugandaSubcounties}
         categoryColor={categoryColor}
         selectedThreat={selectedThreat}
-      />
+      />*/}
     </>
   )
 }

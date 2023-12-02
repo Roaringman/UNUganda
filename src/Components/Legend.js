@@ -17,13 +17,13 @@ function Legend({ map, categoryColor, selectedThreat }) {
       legend.onAdd = () => {
         const div = L.DomUtil.create("div", "info legend")
 
+        console.log("rendering")
+
         var svg = d3
           .select(".legend")
           .append("svg")
           .attr("width", "100%")
           .attr("height", "100%")
-
-        // Handmade legend <rect style="fill: #69b3a2" stroke="black" x=10 y=100, width=300 height=40></rect>
 
         svg
           .append("rect")
